@@ -36,4 +36,36 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function login(Request $request)
+    {
+        $this->validateLogin($request);
+
+      /*  //retrieveByCredentials
+        if ($customer = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
+            $token = Token::create([
+                'customer_id' => $customer->id
+            ]);
+
+            if ($token->sendCode()) {
+                session()->set("token_id", $token->id);
+                session()->set("customer_id", $customer->id);
+                session()->set("remember", $request->get('remember'));
+
+                return redirect("code");
+            }
+
+            $token->delete();// delete token because it can't be sent
+            return redirect('/login')->withErrors([
+                "Unable to send verification code"
+            ]);
+        }
+
+        return redirect()->back()
+            ->withInputs()
+            ->withErrors([
+                $this->username() => \Lang::get('auth.failed')
+            ]);
+            */
+    }
 }

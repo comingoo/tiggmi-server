@@ -24,7 +24,8 @@ class UsersTableSeeder extends Seeder
             'email' => 'mishrakshesh14287@gmail.com',
             'password' => $password,
             'mobile'=>'8318198224',
-            'isVerified'=>0
+            'isVerified'=>1,
+            'is_admin'=>1
         ]);
     }
 }
