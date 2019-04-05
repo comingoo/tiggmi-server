@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Customer;
+use Carbon;
 
 class Token extends Model
 {
@@ -76,7 +77,7 @@ class Token extends Model
      */
     public function isExpired()
     {
-        return $this->created_at->diffInMinutes(\Carbon::now()) > static::EXPIRATION_TIME;
+        return $this->created_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
     }
 
     public function sendCode()

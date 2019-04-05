@@ -18,7 +18,7 @@ class CustomersTableSeeder extends Seeder
         $i =0;
         Customer::truncate();//Empty all user record
         $faker = Faker::create();
-        $password = Hash::make('123456');
+        $password = md5('123456');
         while ($i < 50) {
             $digits_needed=10;
 

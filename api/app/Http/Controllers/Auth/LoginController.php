@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request; 
-use App\Models\User; 
 use Illuminate\Support\Facades\Auth; 
+use App\Services\LoginService;
 use Validator;
+use Carbon\Carbon;
+
+
 class LoginController extends Controller
 {
     /*
@@ -22,62 +25,68 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
-    public $successStatus = 200;
 
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = 'http://localhost:8000';
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    private $loginService;
+
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public $successStatus = 200;
+
+    public function __construct(LoginService $loginService)
     {
-        $this->middleware('guest')->except('logout');
+        //$this->middleware('guest')->except('logout');
+        $this->loginService = $loginService;
+      
     }
 
-    public function login(Request $request)
+       /**
+     * Check User Login Attempt with JWTAuth
+     *
+     * @return Response
+     */
+    public function handleLogin(Request $request)
     {
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
-            $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-            return response()->json(['success' => $success], $this-> successStatus); 
-        } 
-        else{ 
-            return response()->json(['error'=>'Unauthorised'], 401); 
+       
+
+       /* $messages = [
+            'email.required' => "Please enter a valid email address",      
+            'password.required'=> "Please provide a password"
+        ];
+        // Validate fields
+        $validator = Validator::make($request->all(), [
+            // Using a rgex for validate name.
+            'email' => 'required|email',
+            'password' => 'required|min:8'
+        ], $messages);
+
+        //Redirect back if validation fails
+        if($validator->fails()) {
+            return response()->json($validator,500);
+         
         }
-       /* $this->validateLogin($request);
-
-        //retrieveByCredentials
-        if ($customer = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
-            $token = Token::create([
-                'customer_id' => $customer->id
-            ]);
-
-            if ($token->sendCode()) {
-                session()->set("token_id", $token->id);
-                session()->set("customer_id", $customer->id);
-                session()->set("remember", $request->get('remember'));
-
-                return redirect("code");
-            }
-
-            $token->delete();// delete token because it can't be sent
-            return redirect('/login')->withErrors([
-                "Unable to send verification code"
-            ]);
+        */
+        $credentials = $request->only('email', 'password');
+        $response = $this->loginService->postLogin($credentials);
+        if(!empty($response)){
+            return response()->json($response, $this-> successStatus); 
         }
-
-        return redirect()->back()
-            ->withInputs()
-            ->withErrors([
-                $this->username() => \Lang::get('auth.failed')
-            ]);
-            */
+        return response()->json(['Failure'=>[ 'return'=>false,'token'=>null,'user_details'=>null,'error'=>'Invalid Login Credentials']], 401);;
     }
+
 }
