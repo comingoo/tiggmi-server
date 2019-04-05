@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Http\Request; 
+use App\Models\User; 
+use Illuminate\Support\Facades\Auth; 
+use Validator;
 class LoginController extends Controller
 {
     /*
@@ -19,6 +22,7 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    public $successStatus = 200;
 
     /**
      * Where to redirect users after login.
@@ -39,9 +43,17 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $this->validateLogin($request);
+        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
+            $user = Auth::user(); 
+            $success['token'] =  $user->createToken('MyApp')-> accessToken; 
+            return response()->json(['success' => $success], $this-> successStatus); 
+        } 
+        else{ 
+            return response()->json(['error'=>'Unauthorised'], 401); 
+        }
+       /* $this->validateLogin($request);
 
-      /*  //retrieveByCredentials
+        //retrieveByCredentials
         if ($customer = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
             $token = Token::create([
                 'customer_id' => $customer->id
