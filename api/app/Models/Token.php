@@ -87,14 +87,20 @@ class Token extends Model
         }
 
         if (! $this->code) {
-            $this->code = $this->generateCode();
+            $this->code = $this->generateCode(4);
+           //$this->code = 1234 ;
         }
 
         try {
-           /* app('twilio')->messages->create($this->customer->getEmail(),
-                ['from' => env('MAIL_USERNAME'), 'body' => "Your verification code is {$this->code}"]);
+                /*
+                    app('twilio')->messages->create($this->customer->getPhoneNumber(),
+                    ['from' => env('MAIL_USERNAME'), 'body' => "Your verification code is {$this->code}"]);
                 */
-                // OTP send to customer email
+                 // OTP send to customer email
+                //$user  = Customer::find($this->customer);
+               // $user->notify(new \App\Notifications\OTPCreatedNotification());
+               
+                return true;
         } catch (\Exception $ex) {
             return false; //enable to send email
         }

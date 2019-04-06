@@ -18,7 +18,7 @@ class LoginRepository
     {
        // $password = password_hash($password, PASSWORD_BCRYPT);
         $password = md5($data['password']);
-        return User::Where('email_id', $name)->where('password',$password)->first();
+        return User::Where('email', $name)->where('password',$password)->first();
     }
 
     public function create(array $data)

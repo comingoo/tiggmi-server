@@ -21,6 +21,8 @@ class CreateCustomersTable extends Migration
             $table->string('password');
             $table->bigInteger('mobile')->unique();
             $table->tinyInteger('isVerified')->default(0) ; 
+            $table->string('token_2fa')->nullable();
+            $table->datetime('token_2fa_expiry')->nullable();
             $table->rememberToken();            
             $table->timestamps();
         });

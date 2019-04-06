@@ -59,4 +59,14 @@ class Customer extends Authenticatable
     {
         return $this->email;
     }
+    
+      /**
+     * Return the mobile number 
+     *
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->mobile  ;
+    }
 }

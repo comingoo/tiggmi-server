@@ -25,3 +25,10 @@ return $request->user();
  * @return response bearer access token
  */
 Route::post('login', 'Auth\LoginController@handleLogin');
+
+Route::post('customer_login', 'Auth\CustomerLoginController@handleCustomerLogin');
+
+
+Route::post('customer_login/verifyOTP', 'Auth\CustomerLoginController@verifyCustomerOTP');
+
+  

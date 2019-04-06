@@ -56,37 +56,20 @@ class LoginController extends Controller
     }
 
        /**
-     * Check User Login Attempt with JWTAuth
+     * Check User Login Attempt 
      *
      * @return Response
      */
     public function handleLogin(Request $request)
     {
-       
-
-       /* $messages = [
-            'email.required' => "Please enter a valid email address",      
-            'password.required'=> "Please provide a password"
-        ];
-        // Validate fields
-        $validator = Validator::make($request->all(), [
-            // Using a rgex for validate name.
-            'email' => 'required|email',
-            'password' => 'required|min:8'
-        ], $messages);
-
-        //Redirect back if validation fails
-        if($validator->fails()) {
-            return response()->json($validator,500);
-         
-        }
-        */
+               
         $credentials = $request->only('email', 'password');
         $response = $this->loginService->postLogin($credentials);
         if(!empty($response)){
-            return response()->json($response, $this-> successStatus); 
+                return response()->json($response, $this-> successStatus); 
+                     
         }
         return response()->json(['Failure'=>[ 'return'=>false,'token'=>null,'user_details'=>null,'error'=>'Invalid Login Credentials']], 401);;
     }
-
+    
 }
