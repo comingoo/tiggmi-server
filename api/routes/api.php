@@ -25,7 +25,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *
  * @return response bearer access token
  */
-Route::post('login', 'Auth\LoginController@handleLogin')->name('login');
+Route::post('login', 'Auth\LoginController@handleLogin');
 Route::group(['middleware' => 'App\Http\Middleware\CustomerMiddleware'], function()
 {
 /**
@@ -50,10 +50,15 @@ Route::post('customer_login/verifyOTP', 'Auth\CustomerLoginController@verifyCust
  * @return response
  */
 Route::post('customer/profile', 'CustomerController@profile')->name('customer.profile');
+/*
+ * Customer Profile Edit
+ * @parameter bearer token
+ * @return response
+ */
+Route::post('customer/profile/edit', 'CustomerController@editprofile')->name('profile.edit');
 
 });
 
-Auth::routes();
 /*
  * Customer Profile
  * @parameter bearer token

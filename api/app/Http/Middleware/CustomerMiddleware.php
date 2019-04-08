@@ -22,7 +22,7 @@ class CustomerMiddleware
             return $next($request);
         }
         
-        if($request->route()->named('customer.verifyotp')) {
+        else if($request->route()->named('customer.verifyotp')) {
             if( $user && $user->password == md5($request->password))
             {
                 $token = Token::where('customer_id' , $user->id)->where('code',$request->OTP)->first();
@@ -49,7 +49,7 @@ class CustomerMiddleware
             }
             
         }
-        if($request->route()->named('customer.profile'))
+        else if($request->route()->named('customer.profile'))
         {
             $token = $request->bearerToken();
 
