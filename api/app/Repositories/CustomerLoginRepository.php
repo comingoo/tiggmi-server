@@ -110,11 +110,6 @@ class CustomerLoginRepository
         if( $user && $user->password == md5($data['password']))
             {
                 $token = Token::where('customer_id' , $user->id)->where('code',$data['OTP'])->first();
-                $from = Carbon\Carbon::createFromFormat('Y-m-d H:s:i',$token->created_at);
-                $curr_date = Carbon\Carbon::now();
-                $to = Carbon\Carbon::createFromFormat('Y-m-d H:s:i',  $curr_date);                
-                
-                $diff_in_minutes = $to->diffInMinutes($from);
                 if (($token->used) == 1) {
                     $success['Failure']= array( 
                         'return'=>false,
@@ -124,17 +119,7 @@ class CustomerLoginRepository
                                                          
                    return $success;
                 }
-                elseif($diff_in_minutes > 15){
-                   
-                    $success['Failure']= array( 
-                        'return'=>false,
-                        'error'=> "OTP Expired ,Please try again",
-                        'expireBefore'=>$diff_in_minutes ." minutes",
-                        'successcode' =>401
-                    );
-                                                         
-                   return $success;
-                } 
+                
                 else{
                     $token->used = 1;
                     $token->save();

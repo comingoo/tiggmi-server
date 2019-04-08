@@ -89,5 +89,37 @@ class CustomerLoginController extends Controller
         return response()->json(['Failure'=>[ 'return'=>false,'token'=>null,'user_details'=>null,'error'=>'Invalid Login Credentials or OTP']], 401);;
   
     }
+    /**
+     * Customer  profile.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function profile(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if (!empty($token)) {
+            $user = User::where('remember_token', '=', $token)->first();
+            if (count($user) > 0) {
+                if ($user->remember_token == $token) {
+                    $user = User::find($user->id);
+                    //dd($user);
+                    return response()->json(['success' => $user], $this->successStatus);
+                }
+
+                return  response()->json(['failure' => [
+                    'return' => false,
+                    'message' => 'Customer Not found',
+                    'error' => 'Unauthorized Access', ],
+                    ], 404);
+            }
+        }
+
+        return  response()->json(['failure' => [
+            'return' => false,
+            'message' => 'Invalid Token access',
+            'error' => 'Unauthorized Access', ],
+            ], 422);
+    }
 
 }

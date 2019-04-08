@@ -12,23 +12,51 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
+
 /*
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-return $request->user();
+    return $request->user();
 });
- */
+*/
 /**
- * Login.
+ * Admin Login.
  *
  * @parameter email , password
  *
  * @return response bearer access token
  */
-Route::post('login', 'Auth\LoginController@handleLogin');
+Route::post('login', 'Auth\LoginController@handleLogin')->name('login');
+Route::group(['middleware' => 'App\Http\Middleware\CustomerMiddleware'], function()
+{
+/**
+ * Customer Login.
+ *
+ * @parameter mobile , password
+ *
+ * @return response OTP
+ */
+Route::post('customer_login', 'Auth\CustomerLoginController@handleCustomerLogin')->name('customer.login');
+/**
+ * Customer OTP VerificationLogin.
+ *
+ * @parameter mobile , password, OTP
+ *
+ * @return response bearer access token
+ */
+Route::post('customer_login/verifyOTP', 'Auth\CustomerLoginController@verifyCustomerOTP')->name('customer.verifyotp');
+/*
+ * Customer Profile
+ * @parameter bearer token
+ * @return response
+ */
+Route::post('customer/profile', 'CustomerController@profile')->name('customer.profile');
 
-Route::post('customer_login', 'Auth\CustomerLoginController@handleCustomerLogin');
+});
 
-
-Route::post('customer_login/verifyOTP', 'Auth\CustomerLoginController@verifyCustomerOTP');
-
-  
+Auth::routes();
+/*
+ * Customer Profile
+ * @parameter bearer token
+ * @return response
+ */
+Route::post('admin/profile', 'AdminController@profile')->name('admin.profile');
