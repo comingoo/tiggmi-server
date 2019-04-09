@@ -25,31 +25,20 @@ class CustomerMiddleware
         else if($request->route()->named('customer.verifyotp')) {
             if( $user && $user->password == md5($request->password))
             {
-                $token = Token::where('customer_id' , $user->id)->where('code',$request->OTP)->first();
-                $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i',$token->created_at);
-                $curr_date = \Carbon\Carbon::now();
-                $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i',  $curr_date);                
-                
-                $diff_in_minutes = $to->diffInMinutes($from);
-                if($diff_in_minutes < 15){
-                    return $next($request);
-                }else{
-                   
-                        $success['Failure']= array( 
-                            'return'=>false,
-                            'error'=> "OTP Expired ,Please try again",
-                            'expireBefore'=>$diff_in_minutes ." minutes",
-                            'successcode' =>401
-                        );
-                                                             
-                       return response()->json($success,401);
-                    
-                }
-                
+                return $next($request);
+               
             }
+            $failed['Failure']= array( 
+                'return'=>false,
+                'error'=> "Invalid Credentials",
+                'successcode' =>401
+            );
+                                                 
+           return response()->json($failed,401);
+        
             
         }
-        else if($request->route()->named('customer.profile'))
+        else if($request->route()->named('customer.profile') || $request->route()->named('customer_profile.edit')  || $request->route()->named('customer.logout'))
         {
             $token = $request->bearerToken();
 
@@ -64,9 +53,6 @@ class CustomerMiddleware
         }
         else{
             return response()->json(['Failure'=>[ 'return'=>false,'token'=>null,'user_details'=>null,'error'=>'Invalid Login Credentials']], 401);;
-  
         }
-         
-        
     }
 }

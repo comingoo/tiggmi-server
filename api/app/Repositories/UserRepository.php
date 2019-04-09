@@ -35,16 +35,13 @@ class UserRepository
         }  
         return ['resposnse' => 'Error','message'=> 'Profile Not found', 'responseCode'=> 404];
      }
-     //Edit Profile of user by User Itself
+     //Edit Profile of Admin by Admin Itself
     public function updateProfile($id, array $data){
         $user = User::find($id);
         $user->name = $data['name'] ;
-        $user->password = md5($data['password']);
-        $user->dob = $data['dob'] ;
-        $user->gender = $data['gender']; 
-        if(isset($data['avatar'])){
-            $user->avatar = $data['avatar']; 
-        }
+       // $user->mobile = $data['mobile'] ;
+        $user->email = $data['email']; 
+        
         if($user->save())  {
             $success['resposnse']  = 'Success';
             $sucess['message']= 'Profile Updated';

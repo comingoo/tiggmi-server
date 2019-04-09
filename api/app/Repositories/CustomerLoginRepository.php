@@ -41,7 +41,11 @@ class CustomerLoginRepository
                 $user->remember_token ='';
 				$user->save();
                 Auth::logout();
-                $success['access_token'] =  $user->remember_token;
+                $success = array(   'access_token' => $user->remember_token,
+                                    'success'=>1,
+                                    'return'=>true,
+                                    'message' => \Lang::get('Logout!') 
+                                );
                 return $success;
             }
             return null;
@@ -119,7 +123,15 @@ class CustomerLoginRepository
                                                          
                    return $success;
                 }
-                
+                else if($token->isExpired()){
+                        $faliure['Failure']= array( 
+                                                    "return"=> false,
+                                                    "error"=> "OTP Expired ,Please try again, maximum time limit 15 min",
+                                                    "successcode"=> 401
+                                                  );
+                                                                
+                        return $faliure;
+                }
                 else{
                     $token->used = 1;
                     $token->save();

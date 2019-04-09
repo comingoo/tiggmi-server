@@ -41,7 +41,7 @@ class Customer extends Authenticatable
 
     
     /**
-     * User tokens relation
+     * Customer tokens relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

@@ -44,7 +44,7 @@ class CustomerLoginService
     }
     /**
      * 
-     * If user loggedin update log_status
+     * If customer loggedin update log_status
      *@attribute(id)
      * 
      */

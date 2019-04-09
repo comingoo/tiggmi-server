@@ -77,7 +77,7 @@ class Token extends Model
      */
     public function isExpired()
     {
-        return $this->created_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
+        return $this->created_at->diffInMinutes(Carbon\Carbon::now()) > static::EXPIRATION_TIME;
     }
 
     public function sendCode()
@@ -91,21 +91,20 @@ class Token extends Model
            //$this->code = 1234 ;
         }
 
-        try {
-                /*
-                    app('twilio')->messages->create($this->customer->getPhoneNumber(),
-                    ['from' => env('MAIL_USERNAME'), 'body' => "Your OTP code is {$this->code}"]);
-                */
-                 // OTP send to customer email
-               //$user  = Customer::where('email', $this->customer->getEmail())->first();
-               //$res = $user->notify(new \App\Notifications\OTPCreatedNotification());
-                $subject = 'Login OTP';
-                $message = "Your OTP code is {$this->code}";
-                mail($this->customer->getEmail(),$subject,$message,env('MAIL_USERNAME'));
-               
-               return true;
-        } catch (\Exception $ex) {
-            return false; //enable to send email
+        try 
+        {
+            /*
+                app('twilio')->messages->create($this->customer->getPhoneNumber(),
+                ['from' => env('MAIL_USERNAME'), 'body' => "Your OTP code is {$this->code}"]);
+            */
+            // OTP send to customer email
+            $subject = 'Login OTP';
+            $message = "Your OTP code is {$this->code}";
+            mail($this->customer->getEmail(),$subject,$message,env('MAIL_USERNAME'));
+            return true;
+        } 
+        catch (\Exception $ex) {
+            return false; //unable to send email
         }
 
         return true;

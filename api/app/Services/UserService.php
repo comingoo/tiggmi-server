@@ -50,8 +50,9 @@ class UserService
 
     /**
      * UPDATE USER PROFILE BY USER ITSELF
-     * @PARAMETER USERID,NAME,DOB,GENDER,PASSWORD
-     * @RETURN RESPONSE
+     * @PARAMETER USERID,NAME,EMAIL,MOBILE
+     * 
+     *  @RETURN RESPONSE
      * 
      */
     public function updateProfile($id, array $data){

@@ -18,14 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-/**
- * Admin Login.
- *
- * @parameter email , password
- *
- * @return response bearer access token
- */
-Route::post('login', 'Auth\LoginController@handleLogin');
 Route::group(['middleware' => 'App\Http\Middleware\CustomerMiddleware'], function()
 {
 /**
@@ -45,6 +37,12 @@ Route::post('customer_login', 'Auth\CustomerLoginController@handleCustomerLogin'
  */
 Route::post('customer_login/verifyOTP', 'Auth\CustomerLoginController@verifyCustomerOTP')->name('customer.verifyotp');
 /*
+ *Customer Logout
+ * @parameter bearer token
+ * @return response
+ */
+Route::post('customer/logout', 'Auth\CustomerLoginController@handleLogout')->name('customer.logout');
+/*
  * Customer Profile
  * @parameter bearer token
  * @return response
@@ -52,16 +50,38 @@ Route::post('customer_login/verifyOTP', 'Auth\CustomerLoginController@verifyCust
 Route::post('customer/profile', 'CustomerController@profile')->name('customer.profile');
 /*
  * Customer Profile Edit
+ * @parameter bearer token,name,mobile,email
+ * @return response
+ * 
+ */
+Route::post('customer/profile/edit', 'CustomerController@editprofile')->name('customer_profile.edit');
+
+});
+
+/**
+ * Admin Login.
+ *
+ * @parameter email , password
+ *
+ * @return response bearer access token
+ */
+Route::post('login', 'Auth\LoginController@handleLogin');
+/*
+ *  Admin Logout
  * @parameter bearer token
  * @return response
  */
-Route::post('customer/profile/edit', 'CustomerController@editprofile')->name('profile.edit');
-
-});
+Route::post('admin/logout', 'Auth\LoginController@handleLogout');
 
 /*
  * Customer Profile
  * @parameter bearer token
  * @return response
  */
-Route::post('admin/profile', 'AdminController@profile')->name('admin.profile');
+Route::post('admin/profile', 'AdminController@profile');
+/*
+ * Admin Profile Edit
+ * @parameter bearer token,name,mobile,email
+ * @return response
+ */
+Route::post('admin/profile/edit', 'AdminController@editprofile');

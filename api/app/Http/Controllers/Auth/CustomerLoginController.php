@@ -50,7 +50,24 @@ class CustomerLoginController extends Controller
      */
     public function handleCustomerLogin(Request $request)
     {
-       
+        $messages = [
+            'mobile.required' => "Please enter a mobile no",      
+            'password.required'=> "Please provide a password"
+        ];
+        // Validate fields
+        $validator = Validator::make($request->all(), [
+            // Using a rgex for validate name.
+            'mobile' => 'required|min:10|max:10|regex:/[0-9]{9}/',
+            'password' => 'required|min:5'
+        ], $messages);
+
+        //Redirect back if validation fails
+        if($validator->fails()) {
+            // $failedRules = $validator->failed();
+             //dd($failedRules);
+            return response()->json($validator,500);
+         
+        }
         
         $credentials = $request->only('mobile', 'password');
         $response = $this->loginService->postLogin($credentials);
@@ -120,6 +137,39 @@ class CustomerLoginController extends Controller
             'message' => 'Invalid Token access',
             'error' => 'Unauthorized Access', ],
             ], 422);
+    }
+
+    /**
+     * Customer Log out 
+     * @parameter Bearer logout
+     * @return Response
+    */
+    public function handleLogout(Request $request)
+    {
+        $token = $request->bearerToken();
+        
+        if (!empty($token)) {
+            
+            try
+            {
+               $response =  $this->loginService->postLogOut($token); 
+               if(empty($response)){
+                    return response()->json(['error' => 'Invalid Bearer Token', 'message' => 'LogOut Failed'], 401);
+               }
+              return response()->json($response, $this->successStatus);
+
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+            
+        } else {
+           
+            return response()->json([
+                'error' => 'Please  Enter Bearer Token',
+                'message' => 'LogOut Failed'
+            ], $this->successStatus);
+        }
+
     }
 
 }

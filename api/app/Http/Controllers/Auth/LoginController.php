@@ -55,13 +55,31 @@ class LoginController extends Controller
       
     }
 
-       /**
+    /**
      * Check User Login Attempt 
      *
      * @return Response
      */
     public function handleLogin(Request $request)
     {
+        $messages = [
+            'email.required' => "Please enter a valid email address",      
+            'password.required'=> "Please provide a password"
+        ];
+        // Validate fields
+        $validator = Validator::make($request->all(), [
+            // Using a rgex for validate name.
+            'email' => 'required|email',
+            'password' => 'required|min:5'
+        ], $messages);
+
+        //Redirect back if validation fails
+        if($validator->fails()) {
+             //$failedRules = $validator->failed();
+             // dd($failedRules);
+            return response()->json($validator,500);
+         
+        }
                
         $credentials = $request->only('email', 'password');
         $response = $this->loginService->postLogin($credentials);
@@ -72,4 +90,44 @@ class LoginController extends Controller
         return response()->json(['Failure'=>[ 'return'=>false,'token'=>null,'user_details'=>null,'error'=>'Invalid Login Credentials']], 401);;
     }
     
+    /**
+     * Admin Log out 
+     * @parameter Bearer logout
+     * @return Response
+    */
+    public function handleLogout(Request $request)
+    {
+        $token = $request->bearerToken();
+        
+        if (!empty($token)) {
+            
+            try {
+               $response =  $this->loginService->postLogOut($token); 
+               if(empty($response)){
+                    return response()->json([
+                        'error' => 'Invalid Bearer Token',
+                        'message' => 'LogOut Failed'
+                    ], 401);
+               }
+
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+            
+        } else {
+           
+            return response()->json([
+                'error' => 'Please  Enter Bearer Token',
+                'message' => 'LogOut Failed'
+            ], $this->successStatus);
+        }
+
+        
+
+        return response()->json([
+            'success'=>1,
+            'return'=>true,
+            'message' => \Lang::get('Logout!'),
+        ], $this->successStatus);
+    }
 }
