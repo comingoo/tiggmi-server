@@ -1,22 +1,34 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-class User extends Authenticatable
-{
-    use Notifiable;
 
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordNotification;
+
+use Carbon\Carbon;
+
+class User extends Model implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
+{
+    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    //public $timestamps = false;
+
     protected $fillable = [
-        'name', 'email', 'password'
+        'first_name', 'last_name', 'email', 'password','address', 'photo', 'dob', 'gender'
     ];
 
     /**
@@ -25,16 +37,19 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','verification_token', 'last_login_time', 'last_login_ip'
     ];
 
+  
     /**
-     * The attributes that should be cast to native types.
+     * Send the password reset notification.
      *
-     * @var array
+     * @param  string  $token
+     * @return void
      */
-    protected $casts = [
-      //  'email_verified_at' => 'datetime',
-    ];
-
+    public function sendPasswordResetNotification($token)
+    {
+       // dd($token);
+        $this->notify(new ResetPasswordNotification($token));
+    }
 }

@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Models\Customer;
+use App\Models\UserAudit;
 
 use Illuminate\Support\Facades\Hash;
 use Validator;
@@ -75,5 +76,22 @@ class LoginRepository
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijk@@3$%^^SJKDFHGSHJGHJDHFDHFGHJDHJDFHJDFDH';
 
         return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
+    }
+
+    public function setLogoutAudit($id)
+    {
+        $userAudit = new UserAudit();
+        $userAudit->setAttribute('user_id', $id);
+        $userAudit->setAttribute('activity', 'Logout');
+        $userAudit->setAttribute('comments', '');
+        return $userAudit;
+    }
+    public function setLoginAudit($id)
+    {
+        $userAudit = new UserAudit();
+        $userAudit->setAttribute('user_id', $id);
+        $userAudit->setAttribute('activity', 'Login');
+        $userAudit->setAttribute('comments', '');
+        return $userAudit;
     }
 }

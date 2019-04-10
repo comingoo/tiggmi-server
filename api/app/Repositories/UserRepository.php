@@ -2,11 +2,43 @@
 namespace App\Repositories;
 
 use App\Models\User;
-
+use App\Models\Customer;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class UserRepository
 {
+    use RegistersUsers;
+    public function __construct()
+    {
+        // $this->middleware('guest');
+    }
+    public function getAll()
+    {
+        return User::all();
+    }
     
+    // Confirm user verificationToken
+    public function updateConfirmation($data)
+    {
+        return User::where('id', $data->id)
+            ->where('verification_token', $data->verification_token)
+            ->update(['isVerified' => $data->verified, 'status' => $data->status]);
+    }
+    
+    // check user
+    public function checkUser($verificationToken)
+    {
+        return User::where('verification_token', $verificationToken)->first();
+    }
+    // get user by email verification
+    public function getUserByEmailAccount($email)
+    {
+        return User::where('email', $email)->first();
+    }
+    public function getUserById($id)
+    {
+        return User::find($id);
+    }
 
     public function getUser($email,$mobile)
     {
@@ -35,22 +67,7 @@ class UserRepository
         }  
         return ['resposnse' => 'Error','message'=> 'Profile Not found', 'responseCode'=> 404];
      }
-     //Edit Profile of Admin by Admin Itself
-    public function updateProfile($id, array $data){
-        $user = User::find($id);
-        $user->name = $data['name'] ;
-       // $user->mobile = $data['mobile'] ;
-        $user->email = $data['email']; 
-        
-        if($user->save())  {
-            $success['resposnse']  = 'Success';
-            $sucess['message']= 'Profile Updated';
-            $sucess['responseCode']= 200;
-            return $sucess ;
-        }  
-        return ['resposnse' => 'Error','message'=> 'Profile Not found', 'responseCode'=> 404];
-          
-    }
+     
     public function create(array $data)
     {
         $user = new User();
@@ -60,7 +77,7 @@ class UserRepository
     }
     public function delete($id)
     {
-        $user = User::find($id); 
+        $user = Customer::find($id); 
         if($user->id ){
              $user->delete();
              return ['success'=>'User Account Deleted','Code'=>200] ;

@@ -2,7 +2,6 @@
 namespace App\Services;
 
 use App\Repositories\UserRepository;
-
 class UserService
 {
    private $userRepository ;
@@ -57,6 +56,11 @@ class UserService
      */
     public function updateProfile($id, array $data){
         return $this->userRepository->updateProfile($id,$data); 
+    }
+
+    public function getUserByEmail($email)
+    {
+        return $this->userRepository->getUserByEmailAccount($email);
     }
    
 }

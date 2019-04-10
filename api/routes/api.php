@@ -89,8 +89,34 @@ Route::post('admin/logout', 'Auth\LoginController@handleLogout');
  */
 Route::post('admin/profile', 'AdminController@profile');
 /*
- * Admin Profile Edit
- * @parameter bearer token,name,mobile,email
- * @return response
+ * Admin Forgot Password Request
+ * @param email
+ * @return response send OTP to email
  */
 Route::post('admin/profile/edit', 'AdminController@editprofile');
+
+/**
+ * Request for forgotten-password
+ * 
+ * @param email
+ * 
+ */
+Route::post('admin/forgot-password','Auth\PasswordController@requestResetPassword');
+ 
+/**
+ * 
+ * Verify password reset Token 
+ * 
+ * 
+ * @param token from reset link
+ * 
+ */
+Route::get('forgot-password/{token}','Auth\PasswordController@resetTokenVerify');
+
+/**
+ * Reset the password using parameter 
+ *
+ * @param  email,token,passwordConfirm
+ * @return \Illuminate\Http\Response -confirmation
+ */
+Route::post('forgot-password/{token}','Auth\PasswordController@resetPassword');
