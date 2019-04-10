@@ -152,4 +152,40 @@ class CustomerLoginRepository
             }  
                 
     }
+
+    /**
+     * 
+     * Customer Mobile Number Check
+     * @parameter mobile
+     * 
+     * @return response
+     * 
+     */
+    public function VerifyCustomerMobileNumber($mobile){
+        //Get the user
+        $user = Customer::where('mobile', $mobile)->first();
+     
+        if($user)
+        {
+            $active = ( $user->isVerified ==1)?true:false;
+            $successCode = ( $user->isVerified ==1)?200:401;
+            $success['result']= array( 
+                'return'=>true,
+                'user_details'=>$user,
+                'status'=> "Mobile  Number Exists",
+                'active' => $active
+            );
+            $success['responseCode'] = $successCode;
+            return $success;  
+
+        }  
+            $failure['result']= array( 
+                'return'=>false,
+                'user_details'=>null,
+                'error'=> "Mobile  Number Not Exists",
+                'responseCode' =>404
+            );
+            return $failure;
+                
+    }
 }

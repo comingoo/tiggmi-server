@@ -17,24 +17,21 @@ class CustomerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $user = Customer::where('mobile', $request->mobile)->first();
-        if ($request->route()->named('customer.login')){
-            return $next($request);
+         if ($request->route()->named('customer.login') || $request->route()->named('mobile.verification')) {
+           return $next($request);            
         }
-        
         else if($request->route()->named('customer.verifyotp')) {
+            $user = Customer::where('mobile', $request->mobile)->first();      
             if( $user && $user->password == md5($request->password))
             {
                 return $next($request);
-               
             }
             $failed['Failure']= array( 
                 'return'=>false,
                 'error'=> "Invalid Credentials",
                 'successcode' =>401
             );
-                                                 
-           return response()->json($failed,401);
+            return response()->json($failed,401);
         
             
         }

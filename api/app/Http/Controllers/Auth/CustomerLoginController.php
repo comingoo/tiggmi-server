@@ -68,15 +68,39 @@ class CustomerLoginController extends Controller
             return response()->json($validator,500);
          
         }
-        
-        $credentials = $request->only('mobile', 'password');
-        $response = $this->loginService->postLogin($credentials);
-        if(!empty($response)){
-            
-            return response()->json($response, $this->successStatus); 
-           
+        // Check mobile number exists or not 
+        $verifyMobile = CustomerLoginController::VerifyMobile($request->mobile);
+        if($verifyMobile['result']['return']){
+            if($verifyMobile['result']['active']){
+                $credentials = $request->only('mobile', 'password');
+                $response = $this->loginService->postLogin($credentials);
+                if(!empty($response)){
+                    
+                    return response()->json($response, $this->successStatus); 
+                
+                }
+                return response()->json(['Failure'=>[ 'return'=>false,'token'=>null,'user_details'=>null,'error'=>'Invalid Login Credentials']], 401);
+    
+            }
+            $verifyMobile['message'] = 'Account not Active';
+            return response()->json($verifyMobile, $verifyMobile['responseCode']);
+      
+        }else{
+            return response()->json($verifyMobile,$verifyMobile['result']['errorcode']);
         }
-        return response()->json(['Failure'=>[ 'return'=>false,'token'=>null,'user_details'=>null,'error'=>'Invalid Login Credentials']], 401);;
+
+
+   }
+
+    /**
+     * Check Customer Mobile Exists or not
+     * @parameter mobile
+     * @response array
+     * 
+     */
+    public function VerifyMobile($mobile){
+        return $this->loginService->VerifyMobile($mobile);
+
     }
 
     public function authenticated()

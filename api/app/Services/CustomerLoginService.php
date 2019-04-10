@@ -44,6 +44,15 @@ class CustomerLoginService
     }
     /**
      * 
+     * VerifyMobile of customer
+     * @parameter mobile 
+     * @return response
+     */
+    public function VerifyMobile($mobile){
+        return $this->loginRepository->VerifyCustomerMobileNumber($mobile);
+    }
+    /**
+     * 
      * If customer loggedin update log_status
      *@attribute(id)
      * 

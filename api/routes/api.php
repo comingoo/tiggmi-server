@@ -29,6 +29,15 @@ Route::group(['middleware' => 'App\Http\Middleware\CustomerMiddleware'], functio
  */
 Route::post('customer_login', 'Auth\CustomerLoginController@handleCustomerLogin')->name('customer.login');
 /**
+ * Customer Mobile Verification.
+ *
+ * @parameter mobile 
+ *
+ * @return true/false
+ */
+Route::get('customer/{mobile}', 'Auth\CustomerLoginController@VerifyMobile')->name('mobile.verification');
+
+/**
  * Customer OTP VerificationLogin.
  *
  * @parameter mobile , password, OTP
