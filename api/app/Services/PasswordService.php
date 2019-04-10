@@ -13,6 +13,7 @@ class PasswordService
 
     public function resetPassword(array $data)
     {
+       // dd($data);
         $response = $this->verifyPasswordRecovery($data['token']);
 
         if ($response['status'] === 200) {

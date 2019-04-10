@@ -105,13 +105,12 @@ Route::post('admin/forgot-password','Auth\PasswordController@requestResetPasswor
  
 /**
  * 
- * Verify password reset Token 
- * 
- * 
+ * Verify password reset -Token 
  * @param token from reset link
+ * @return successCode,email
  * 
  */
-Route::get('forgot-password/{token}','Auth\PasswordController@resetTokenVerify');
+Route::get('forgot-password/{token}','Auth\PasswordController@getVerifyToken');
 
 /**
  * Reset the password using parameter 

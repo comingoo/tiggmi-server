@@ -37,12 +37,21 @@ class PasswordController extends Controller
 
     public function resetTokenVerify($token)
     {
-        dd($token);
         //retrieve user's email by PasswordResetToken
         $user = $this->passwordService->getEmailByPasswordResetToken($token);
         if (count($user) > 0) {
             $response = $this->passwordService->verifyPasswordRecovery($token, $user->email);
             return response()->json($response, $response['status']);
+        }
+        return response()->json(['error' => 'Token Invalid!'], 401);
+    }
+
+    public function getVerifyToken(Request $request)
+    {
+        //retrieve user's email by PasswordResetToken
+        $token = $request->token;
+        if(!empty($token)){
+            return $this->resetTokenVerify($token);
         }
         return response()->json(['error' => 'Token Invalid!'], 401);
     }
@@ -55,10 +64,16 @@ class PasswordController extends Controller
      */
     public function resetPassword(Request $request)
     {
-        $response = $this->passwordService->resetPassword($request->all());
-
-        return response()->json($response, $response['status']);
-
+        $token = $request->token;
+        if(!empty($token)){
+            $data = $request->all();
+            $data['token'] = $request->token;
+            $response = $this->passwordService->resetPassword($data);
+    
+            return response()->json($response, $response['status']);
+    
+        }
+       
     }
 
     /**
