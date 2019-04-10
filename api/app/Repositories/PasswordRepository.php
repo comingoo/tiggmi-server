@@ -13,7 +13,7 @@ class PasswordRepository
 
     public function checkToken($token)
     {
-        return User::where('verification_token', '=', $token)->first();
+        return User::where('remember_token', '=', $token)->first();
     }
 
     public function updatePassword(array $data)
@@ -29,8 +29,9 @@ class PasswordRepository
         }
 
         $data['email'] = $resetToken->email;
-        $data['password'] = password_hash($data['passwordConfirm'], PASSWORD_BCRYPT);
-
+       // $data['password'] = password_hash($data['passwordConfirm'], PASSWORD_BCRYPT);
+       $data['password'] = md5($data['passwordConfirm']);
+      
         User::where('email', $data['email'])->update(array('password' => $data['password']));
 
         //now update the reset token values       
@@ -58,7 +59,8 @@ class PasswordRepository
      */
     public function changePassword(array $data, $id)
     {
-        $data['password'] = password_hash($data['passwordConfirm'], PASSWORD_BCRYPT);
+       // $data['password'] = password_hash($data['passwordConfirm'], PASSWORD_BCRYPT);
+       $data['password'] = md5($data['passwordConfirm']);
         return User::where('id', $id)
             ->update(array('password' => $data['password']));
     }
@@ -70,7 +72,11 @@ class PasswordRepository
     {
         $user = User::find($id);
         $oldpassword = $data['oldPassword'];
-        if (Hash::check($oldpassword, $user->password)) {
+      /*  if (Hash::check($oldpassword, $user->password)) {
+            return $user;
+        }*/
+        if($user->password == md5($oldpassword))
+        {
             return $user;
         }
         return null;

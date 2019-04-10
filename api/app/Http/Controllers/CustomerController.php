@@ -128,4 +128,29 @@ class CustomerController extends Controller
             'error' => 'Unauthorized Access', ],
             ], 422);
     }
+
+     /**
+     * Change Password for Loggedin Customer user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if (!empty($token)) {
+            $user = Customer::where('remember_token', '=', $token)->first();
+            $id = $user->id;
+            //dd($id);
+            $response = $this->customerService->changePassword($request->all(), $id);
+            return response()->json($response, $response['status']);
+        }
+        return  response()->json(['failure' => [
+                                                'return' => false,
+                                                'message' => 'Invalid Token access',
+                                                'error' => 'Unauthorized Access', ],
+                                 ], 422);
+    }
+
 }

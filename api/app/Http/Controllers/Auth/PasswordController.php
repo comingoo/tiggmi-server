@@ -7,6 +7,7 @@ use App\Services\UserService;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class PasswordController extends Controller
 {
@@ -93,6 +94,11 @@ class PasswordController extends Controller
             $response = $this->passwordService->changePassword($request->all(), $id);
             return response()->json($response, $response['status']);
         }
+        return  response()->json(['failure' => [
+            'return' => false,
+            'message' => 'Invalid Token access',
+            'error' => 'Unauthorized Access', ],
+            ], 422);
     }
 
     

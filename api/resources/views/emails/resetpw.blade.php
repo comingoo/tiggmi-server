@@ -17,7 +17,7 @@
 	<br/>
 	<div>
 		Please confirm by clicking
-		<a href="{{ URL::to(env('APP_WEB_URL').'/forgot-password/'. $token) }}">here</a> to reset your password. This confirmation link will be active for next 7 days, after that you need to make a new
+		<a href="{{ URL::to(env('APP_WEB_URL').'/forgot-password/'. $token) }}">here</a> to reset your password. This confirmation link will be active for next 3 days, after that you need to make a new
 		password change request.
 	</div>
 	<br/>

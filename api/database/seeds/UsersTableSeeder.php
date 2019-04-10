@@ -18,9 +18,10 @@ class UsersTableSeeder extends Seeder
         //
         User::truncate();//Empty all user record
         $faker = Faker::create();
-       /*
         $password = md5('123456');
-        
+       
+       /*
+         
         User::create([
             'name' => 'Shesh',
             'email' => 'mishrakshesh14287@gmail.com',
@@ -30,7 +31,7 @@ class UsersTableSeeder extends Seeder
             'is_admin'=>1
         ]);
         */
-        $password = password_hash('123456', PASSWORD_BCRYPT);
+        //$password = password_hash('123456', PASSWORD_BCRYPT);
         User::create([
             'first_name' => 'Adminstration',
             'last_name' => 'Rules',

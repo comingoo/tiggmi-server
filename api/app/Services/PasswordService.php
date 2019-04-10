@@ -54,7 +54,7 @@ class PasswordService
      * Change Password for user
      *
      * @param array ['oldPassword','passwordConfirm']
-     * @return
+     * @return json response
      */
     public function changePassword(array $data, $id)
     {

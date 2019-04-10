@@ -35,7 +35,7 @@ class CustomerMiddleware
         
             
         }
-        else if($request->route()->named('customer.profile') || $request->route()->named('customer_profile.edit')  || $request->route()->named('customer.logout'))
+        else if($request->route()->named('customer.profile') || $request->route()->named('customer.passwordChange') || $request->route()->named('customer_profile.edit')  || $request->route()->named('customer.logout'))
         {
             $token = $request->bearerToken();
 

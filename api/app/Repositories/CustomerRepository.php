@@ -10,7 +10,7 @@ class CustomerRepository
 
     public function getCustomer($mobile)
     {
-        return Customer::Where('mobileno', $mobile)->first();
+        return Customer::Where('mobile', $mobile)->first();
     }
      //Edit Profile of Customer by Admin
      public function update(array $data)
@@ -70,6 +70,32 @@ class CustomerRepository
         //dd($data);     
          return $this->update($data);
     }
-    
-
+     /**
+     * Change Password
+     *
+     */
+    public function changePassword(array $data, $id)
+    {
+       // $data['password'] = password_hash($data['passwordConfirm'], PASSWORD_BCRYPT);
+       $data['password'] = md5($data['passwordConfirm']);
+        return Customer::where('id', $id)
+            ->update(array('password' => $data['password']));
+    }
+    /**
+     * Verify/Match oldPassword
+     * for loggedin user
+     */
+    public function oldPasswordVerify(array $data, $id)
+    {
+        $user = Customer::find($id);
+        $oldpassword = $data['oldPassword'];
+      /*  if (Hash::check($oldpassword, $user->password)) {
+            return $user;
+        }*/
+        if($user->password == md5($oldpassword))
+        {
+            return $user;
+        }
+        return null;
+    }
 }

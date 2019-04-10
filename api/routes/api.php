@@ -65,6 +65,12 @@ Route::post('customer/profile', 'CustomerController@profile')->name('customer.pr
  */
 Route::post('customer/profile/edit', 'CustomerController@editprofile')->name('customer_profile.edit');
 
+/*
+ * Customer password Change 
+ * @param bearer token, oldPassword , passwordConfirm
+ * @return response 
+ */
+Route::post('customer/change-password', 'CustomerController@changePassword')->name('customer.passwordChange'); 
 });
 
 /**
@@ -83,18 +89,23 @@ Route::post('login', 'Auth\LoginController@handleLogin');
 Route::post('admin/logout', 'Auth\LoginController@handleLogout');
 
 /*
- * Customer Profile
+ * Admin Profile
  * @parameter bearer token
  * @return response
  */
 Route::post('admin/profile', 'AdminController@profile');
 /*
- * Admin Forgot Password Request
+ * Admin Profile Update Request
  * @param email
  * @return response send OTP to email
  */
 Route::post('admin/profile/edit', 'AdminController@editprofile');
-
+/*
+ * Admin password Change  Request
+ * @param bearer token, oldPassword , passwordConfirm
+ * @return response 
+ */
+Route::post('admin/change-password', 'Auth\PasswordController@changePassword'); 
 /**
  * Request for forgotten-password
  * 
