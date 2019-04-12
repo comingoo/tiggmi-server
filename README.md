@@ -19,15 +19,15 @@ Steps-
 
     run "composer install" to install all the project dependencies
 
-    rund command "copy .env.example .env" , this will make local .env file
+    rund command "copy .env.example .env" , this will make local .env file (already uploaded only need to update on server)
 
     run "php artisan key:generate" to generate the application key.
 
     Configure database
     a. Open .env file and check db configs, namely 5 below. Ensure correct values for the configs
 
-     DB_HOST=127.0.0.1
-     DB_PORT=3306
+     DB_HOST=<Your host name>
+     DB_PORT=<database access port>
      DB_DATABASE=<your database name>
      DB_USERNAME=<your db user name>
      DB_PASSWORD=<replace this with the correct password>
@@ -39,6 +39,7 @@ Steps-
 
     configure :
       APP_URL = "<YOUR Server Url>"
+      APP_NAME <Your app>
       
       Configure : 
       MAIL_USERNAME =<Your smtp email>
